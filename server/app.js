@@ -1,71 +1,79 @@
-//cargando depedencia
+// Cargando dependencias
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-//var debug = require('debug')('dwpc2:server');
+import debug from './services/debugLogger';
+
+// var debug = require('debug')('dwpcii:server');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-//importado de los midleware de webpack
+
+// Setting Webpack Modules
 import webpack from 'webpack';
 import WebpackDevMiddleware from 'webpack-dev-middleware';
 import WebpackHotMiddleware from 'webpack-hot-middleware';
-// inportando la configuracion de webpack
+// Importing webpack configuration
 import webpackConfig from '../webpack.dev.config';
-//se importa el debugger
-import debug from './services/debugLogger';
-//Creando la instancia de express
+
+// Creando la instancia de express
 var app = express();
-// modo de ejecucion
+
+// Get the execution mode
 const nodeEnviroment = process.env.NODE_ENV || 'production'
-//Carga de Webpack
-// se decide si se utiliza el middleware o si no se usa
+
+// Deciding if we add webpack middleware or not
 if(nodeEnviroment === 'development'){
   // Start Webpack dev server
-  console.log("🛠️  Ejecutando en modo desarrollo");
-  debug('✒ Ejecutando en modo de desarrollo 👨‍💻');
-  // Se agrega una llave "mode" con valor "development"
+  debug("🛠️ Ejecutando en modo desarrollo 🛠️");
+  // Adding the key "mode" with its value "development"
   webpackConfig.mode = nodeEnviroment;
-  //  Se ve que dev server tenga el mismo valor qye el servidor de express 
+  // Setting the dev server port to the same value as the express server
   webpackConfig.devServer.port = process.env.PORT;
-  // Hot module replacement(implementacion de la carga activa)
+  // Setting up the HMR (Hot Module Replacement)
   webpackConfig.entry = [
     "webpack-hot-middleware/client?reload=true&timeout=1000",
     webpackConfig.entry
   ];
-	// Agregar el plugin a la configuración de desarrollo de webpack
+	// Agregar el plugin a la configuración de desarrollo
+  // de webpack
   webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
   // Creating the bundler
   const bundle = webpack(webpackConfig);
-  // habilita el middleware de webpack
+  // Enabling the webpack middleware
   app.use( WebpackDevMiddleware(bundle, {
     publicPath: webpackConfig.output.publicPath
   }) );
-  //  Inhabilita el webpack HMR
+  //  Enabling the webpack HMR
   app.use( WebpackHotMiddleware(bundle) );
 }else{
   console.log("🏭 Ejecutando en modo producción 🏭");
 }
 
-// configura el motor de plantillas
-debug(`📣Ruta de app: ${path.join(__dirname,'views')}`);
+// Configurando el motor de plantillas
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
-// se establecen los middleware
+
+// Se establecen los middlewares
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-//crea un servidor de archivos estaticos
-app.use(express.static(path.join(__dirname,'..','public')));
-//registro de middleware de aplicacion
-app.use('/', indexRouter);
-//activa usersRouter cunado se solicta el recurso raiz users
-app.use('/users', usersRouter);
+// Crea un server de archivos estaticos
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
-// middleware que toma los errores
+// Registro de Middlewares de aplicación
+app.use('/', indexRouter);
+// Activa "usersRourter" cuando se
+// solicita "/users"
+app.use('/users', usersRouter);
+// app.use('/author', (req, res)=>{
+//   res.json({mainDeveloper: "Ivan Rivalcoba"})
+// });
+
+// catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
@@ -76,7 +84,7 @@ app.use(function(err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // error de render
+  // render the error page
   res.status(err.status || 500);
   res.render('error');
 });

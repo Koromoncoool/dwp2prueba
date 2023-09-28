@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./dist/bin/www",
-    "dev": "DEBUG=dwpc2:server && babel-watch ./server/bin/www",
+    "dev": "NODE_ENV=development DEBUG=dwpc2:server babel-watch ./server/bin/www",
     "b:s": "npm run cleans && babel ./server --out-dir dist --copy-files",
     "devc": "NODE_ENV=development webpack serve --config ./webpack.dev.config.js --mode development",
     "cleans": "rm -rf ./dist",
