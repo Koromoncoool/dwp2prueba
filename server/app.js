@@ -3,7 +3,7 @@ import createError from "http-errors";
 import express from "express";
 import path from "path";
 import cookieParser from "cookie-parser";
-import logger from "morgan";
+import morgan from "morgan";
 // var debug = require('debug')('dwpcii:server');
 import webpack from "webpack";
 import WebpackDevMiddleware from "webpack-dev-middleware";
@@ -15,6 +15,12 @@ import usersRouter from "./routes/users";
 // Setting Webpack Modules
 // Importing webpack configuration
 import webpackConfig from "../webpack.dev.config";
+// Import winston logger
+import log from "./config/winston";
+
+// Creando variable del directorio raiz
+// eslint-disable-next-line
+global["__rootdir"] = path.resolve(process.cwd());
 
 // Creando la instancia de express
 const app = express();
@@ -57,7 +63,8 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "hbs");
 
 // Se establecen los middlewares
-app.use(logger("dev"));
+app.use(morgan("dev", { stream: log.stream }));
+app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -75,6 +82,7 @@ app.use("/users", usersRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
+  log.info(`404 Pagina no encontrada ${req.method} ${req.originalUrl}`);
   next(createError(404));
 });
 
@@ -85,6 +93,8 @@ app.use((err, req, res) => {
   res.locals.error = req.app.get("env") === "development" ? err : {};
   // render the error page
   res.status(err.status || 500);
+  log.error(`${err.status || 500} - ${err.message}`);
+
   res.render("error");
 });
 
