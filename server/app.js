@@ -8,6 +8,8 @@ import morgan from "morgan";
 import webpack from "webpack";
 import WebpackDevMiddleware from "webpack-dev-middleware";
 import WebpackHotMiddleware from "webpack-hot-middleware";
+// Se importa el template Engine
+import configTemplateEngine from "./config/templateEngine";
 import debug from "./services/debugLogger";
 import indexRouter from "./routes/index";
 import usersRouter from "./routes/users";
@@ -58,9 +60,12 @@ if (nodeEnviroment === "development") {
   console.log("🏭 Ejecutando en modo producción 🏭");
 }
 
-// Configurando el motor de plantillas
+/* Se elimina handlebar de plantillas anteriores
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "hbs");
+*/
+// Configuring the template engine
+configTemplateEngine(app);
 
 // Se establecen los middlewares
 app.use(morgan("dev", { stream: log.stream }));
