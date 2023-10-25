@@ -9,6 +9,9 @@ import app from "../app";
 // Importing winston logger
 import log from "../config/winston";
 
+// importando llaves de configuracion
+import configKeys from "../config/configKeys";
+
 // const debug = require("debug")("dwpcii1:server");
 
 /**
@@ -35,7 +38,7 @@ function normalizePort(val) {
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(process.env.PORT || "3000");
+const port = normalizePort(configKeys.PORT);
 app.set("port", port);
 
 /**
