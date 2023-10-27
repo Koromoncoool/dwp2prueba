@@ -12,7 +12,7 @@ const defaultConfig = {
   IP: process.env.IP || "0.0.0.0",
 };
 const devConfig = {
-  DEV_VALUE: 100,
+  MONGO_URL: process.env.DEV_DATABASE_URL,
 };
 
 const testConfig = {
@@ -20,7 +20,7 @@ const testConfig = {
 };
 
 const prodConfig = {
-  DEV_VALUE: 300,
+  MONGO_URL: process.env.PROD_DATABASE_URL,
 };
 // exportar el el obejto de configuracion
 // Crando una funcion selectora
