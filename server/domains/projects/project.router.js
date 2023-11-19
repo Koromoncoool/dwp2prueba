@@ -1,13 +1,13 @@
 // Importando el Router de Express
-import { Router } from "express";
+import { Router } from 'express';
 
 // Importando el controlador
-import projectController from "./project.controller";
+import projectController from './project.controller';
 
 // Importando factory de validación
-import ValidateFactory from "../../services/validateFactory";
+import ValidateFactory from '../../services/validateFactory';
 // Importando el validador de proyectos
-import projectValidator from "./project.validator";
+import projectValidator from './project.validator';
 
 // Creando una isntancia del enrutador
 const router = new Router();
@@ -17,15 +17,15 @@ const router = new Router();
 // GET '/project/addForm'
 // GET '/project/add'
 // GET '/project'
-router.get(["/", "/addForm", "/add"], projectController.addForm);
+router.get(['/', '/addForm', '/add'], projectController.addForm);
 
 // GET '/project/showDashboard'
 // GET '/project/projects'
-router.get(["/showDashboard", "/projects"], projectController.showDashboard);
+router.get(['/showDashboard', '/projects'], projectController.showDashboard);
 
 // POST "/project/add"
 router.post(
-  "/add",
+  '/add',
   ValidateFactory({
     schema: projectValidator.projectSchema,
     getObject: projectValidator.getProject,
@@ -34,11 +34,11 @@ router.post(
 );
 
 // GET "/project/edit/:id"
-router.get("/edit/:id", projectController.edit);
+router.get('/edit/:id', projectController.edit);
 
 // PUT "/project/edit/:id"
 router.put(
-  "/edit/:id",
+  '/edit/:id',
   ValidateFactory({
     schema: projectValidator.projectSchema,
     getObject: projectValidator.getProject,
@@ -46,5 +46,7 @@ router.put(
   projectController.editPut,
 );
 
+// DELETE "/project/:id"
+router.delete('/:id', projectController.deleteProject);
 // Exporto este tramo de ruta
 export default router;
