@@ -1,5 +1,5 @@
 // importando mongoose
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 // Desestructurando la funcion Schema
 const { Schema } = mongoose;
 
@@ -20,4 +20,4 @@ const ProjectSchema = new Schema({
 });
 // copilando el schema
 // genera el modelo
-export default mongoose.model("project", ProjectSchema);
+export default mongoose.model('project', ProjectSchema);
